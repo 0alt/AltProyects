@@ -81,6 +81,97 @@
     .wrap{grid-template-columns:1fr; padding:0 8px}
     .sidebar{position:relative;top:0}
   }
+
+  /* ---------------------------
+     ANIMACIONES Y EFECTOS NUEVOS
+     --------------------------- */
+
+  /* Baseline oculto para elementos animables (aparece como efecto de entrada) */
+  .logo, .card, .heading, .category-btn, .modpack {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+    transition: opacity .45s cubic-bezier(.2,.9,.3,1), transform .45s cubic-bezier(.2,.9,.3,1), box-shadow .25s ease;
+    will-change: opacity, transform;
+  }
+
+  /* Clase que se añade para mostrar elementos (stagger) */
+  .reveal-visible {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Animación flotante del logo/mark */
+  @keyframes float-mark {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0); }
+  }
+  .logo .mark {
+    animation: float-mark 3.6s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  /* Hover sutil en modpacks */
+  .modpack:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 14px 30px rgba(0,0,0,.55);
+  }
+
+  /* Efecto "shine" en botones de descarga */
+  .download-btn {
+    position: relative;
+    overflow: hidden;
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .download-btn::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.0) 50%, rgba(255,255,255,0.06) 100%);
+    transform: translateX(-110%) skewX(-12deg);
+    transition: transform .6s cubic-bezier(.2,.8,.2,1);
+    pointer-events: none;
+  }
+  .download-btn:hover::after{
+    transform: translateX(110%) skewX(-12deg);
+  }
+
+  /* Subrayado animado en categoría activa */
+  .category-btn {
+    position: relative;
+    overflow: visible;
+  }
+  .category-btn::after{
+    content: "";
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    bottom: -8px;
+    height: 3px;
+    background: linear-gradient(90deg,var(--accent),#ff7777);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform .28s cubic-bezier(.2,.9,.3,1);
+    border-radius: 6px;
+    opacity: 0.95;
+  }
+  .category-btn.active::after{ transform: scaleX(1); }
+
+  /* Modal: escalado y fade-in efectivo cuando se abre vía display:flex (se detecta style inline) */
+  .modal { transform: translateY(8px) scale(.98); opacity: 0; transition: transform .18s ease, opacity .18s ease; }
+  .modal-bg[style*="display: flex"] .modal { transform: none; opacity: 1; }
+
+  /* Mejora de contraste para títulos con acento */
+  .heading h1 { letter-spacing: 0.4px; }
+  .card h3 { letter-spacing: 0.3px; }
+
+  /* Respecto a usuarios que prefieren reducir movimiento */
+  @media (prefers-reduced-motion: reduce) {
+    .logo .mark { animation: none; }
+    .logo, .card, .heading, .category-btn, .modpack, .modal { transition: none !important; transform: none !important; opacity: 1 !important; }
+    .download-btn::after { transition: none; transform: none; opacity: 0; }
+  }
+
 </style>
 </head>
 <body>
@@ -290,14 +381,18 @@
           </div>
         </div>
       </div>
-   <div class="modpack" data-nombre="Placeholder E" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-          <div class="left">
-            <span>Bloque vacío</span>
-            <div class="meta"><small>Próximamente · No disponible</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
+
     </div> <!-- list-container -->
+
+    <div class="modpack" data-nombre="Placeholder E" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
+      <div class="left">
+        <span>Bloque vacío</span>
+        <div class="meta"><small>Próximamente · No disponible</small></div>
+      </div>
+      <div>
+        <button class="download-btn">Descargar</button>
+      </div>
+    </div>
 
   </main>
 
@@ -379,7 +474,53 @@ document.addEventListener('keydown', (e)=>{
 });
 </script>
 
+<!-- SCRIPT ADICIONAL: aplica staggered reveal y mejoras visuales sin tocar textos -->
+<script>
+  (function(){
+    // Esperar que DOM esté listo
+    function ready(fn){ if(document.readyState!='loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+
+    ready(function(){
+      // Elementos a animar
+      const els = Array.from(document.querySelectorAll('.logo, .card, .heading, .category-btn, .modpack'));
+      // Stagger corto (ms)
+      const baseDelay = 60;
+      els.forEach((el, i) => {
+        // Forzamos hardware acceleration hint
+        el.style.willChange = 'opacity, transform';
+        // Dejamos un pequeño delay escalonado
+        setTimeout(() => {
+          el.classList.add('reveal-visible');
+        }, i * baseDelay);
+      });
+
+      // Mejora: cuando se hace click en una categoría, animar su contenido
+      document.querySelectorAll('.category-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          // pequeña animación al botón (scale)
+          btn.animate([{ transform: 'scale(0.98)' }, { transform: 'scale(1)' }], { duration: 180, easing: 'cubic-bezier(.2,.9,.3,1)' });
+          // re-aplicar reveal a los modpacks visibles para efecto de entrada
+          const visiblePacks = document.querySelectorAll('.category.active .modpack');
+          visiblePacks.forEach((p, idx) => {
+            p.classList.remove('reveal-visible');
+            setTimeout(()=> p.classList.add('reveal-visible'), 80 + idx * 40);
+          });
+        });
+      });
+
+      // Añadir un pequeño efecto visual en focus (accesibilidad)
+      document.querySelectorAll('button, a').forEach(el=>{
+        el.addEventListener('focus', () => el.classList.add('reveal-visible'));
+      });
+
+      // Si el usuario prefiere reducir movimiento, no hacer stagger (dejar todo visible)
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if(mq.matches){
+        els.forEach(el=> el.classList.add('reveal-visible'));
+      }
+    });
+  })();
+</script>
+
 </body>
 </html>
-
-
