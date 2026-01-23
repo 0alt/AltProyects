@@ -1,157 +1,380 @@
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>AltProyects</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
-body{min-height:100vh;display:flex;flex-direction:column;align-items:center;background:linear-gradient(180deg,#000,#4b0000);color:#fff;padding:50px 20px}
-h1{font-size:3rem;color:#ff5555}
-h2{font-size:1.2rem;opacity:.8;margin-bottom:30px}
-h3{margin-bottom:15px;color:#ff5555}
-.list-container{width:100%;max-width:500px}
-.modpack{background:rgba(30,30,30,.8);padding:20px;margin-bottom:15px;border-radius:12px;display:flex;justify-content:space-between;align-items:center}
-.download-btn{padding:10px 20px;background:#ff5555;border:none;border-radius:8px;color:white;cursor:pointer;font-weight:bold}
-.download-btn:hover{background:#cc4444}
-.categories{margin-top:20px;display:flex;gap:10px}
-.category-btn{padding:8px 16px;border-radius:20px;border:1px solid #ff5555;background:transparent;color:#ff5555;cursor:pointer;font-weight:bold}
-.category-btn.active{background:#ff5555;color:white}
-.category{display:none;opacity:0;transform:translateY(10px)}
-.category.active{display:block;animation:fadeSlideIn 0.35s ease forwards}
-@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1000}
-.modal{background:#1e1e1e;width:90%;max-width:400px;border-radius:12px;padding:20px}
-.close{text-align:right;cursor:pointer;color:#ff5555;margin-bottom:10px}
-.final-download{margin-top:15px;width:100%;padding:12px;background:#ff5555;border:none;border-radius:8px;color:white;font-size:1rem;font-weight:bold;cursor:pointer}
-.final-download:hover{background:#cc4444}
+  :root{
+    --bg-1:#000;
+    --bg-2:#4b0000;
+    --card:rgba(30,30,30,.85);
+    --accent:#ff5555;
+    --muted:#cfcfcf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+  body{
+    min-height:100vh;
+    background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    color:#fff;
+    padding:28px;
+    display:flex;
+    justify-content:center;
+  }
+  .wrap{
+    width:100%;
+    max-width:1100px;
+    display:grid;
+    grid-template-columns:320px 1fr;
+    gap:28px;
+    align-items:start;
+  }
+
+  /* SIDEBAR */
+  .sidebar{position:sticky;top:28px}
+  .card{background:var(--card);padding:14px;border-radius:12px;margin-bottom:16px;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+  .logo{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+  .logo .mark{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#ff7777);display:flex;align-items:center;justify-content:center;font-weight:800;color:#111;font-size:18px;box-shadow:0 6px 16px rgba(0,0,0,.6)}
+  .logo h1{font-size:20px;color:var(--accent)}
+  .logo p{font-size:12px;color:var(--muted);margin-top:4px}
+
+  .card h3{color:var(--accent);font-size:14px;margin-bottom:10px}
+  .servers p{font-size:13px;color:var(--muted);margin:6px 0}
+
+  .socials{display:flex;gap:8px;margin-top:8px}
+  .socials a{display:inline-flex;align-items:center;justify-content:center;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.04);background:rgba(255,255,255,.02);text-decoration:none;color:var(--muted);font-size:13px}
+
+  /* MAIN */
+  .main{}
+  .heading{margin-bottom:12px}
+  .heading h2{font-size:22px;color:var(--accent)}
+  .heading p{color:var(--muted);margin-top:6px;font-size:13px}
+
+  .categories{display:flex;gap:8px;margin:16px 0 18px}
+  .category-btn{padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.06);background:transparent;color:var(--muted);cursor:pointer;font-weight:700;font-size:13px}
+  .category-btn.active{background:var(--accent);color:#111;border-color:var(--accent)}
+
+  .list-container{display:flex;flex-direction:column;gap:12px}
+
+  .modpack{display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.02)}
+  .modpack span{font-weight:700}
+  .meta{color:var(--muted);font-size:12px;margin-top:6px}
+  .left{display:flex;flex-direction:column;gap:6px}
+
+  .download-btn{padding:10px 16px;border-radius:8px;border:none;background:var(--accent);color:#111;font-weight:800;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.45)}
+  .download-btn:hover{transform:translateY(-2px)}
+  .download-btn.disabled{background:#444;color:#bbb;cursor:not-allowed;box-shadow:none;transform:none;opacity:0.75}
+
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:999}
+  .modal{width:92%;max-width:420px;background:#151515;padding:18px;border-radius:12px}
+  .modal .close{color:var(--accent);text-align:right;cursor:pointer;font-weight:800}
+  .modal p{color:var(--muted);margin:8px 0;font-size:14px}
+  .final-download{margin-top:12px;width:100%;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#111;font-weight:800;cursor:pointer}
+
+  footer{margin-top:26px;color:var(--muted);font-size:13px;text-align:center;grid-column:1/-1}
+
+  @media(max-width:880px){
+    .wrap{grid-template-columns:1fr; padding:0 8px}
+    .sidebar{position:relative;top:0}
+  }
 </style>
 </head>
 <body>
 
-<h1>¡AltProyects!</h1>
-<h2>Optimizaciones (mods) de juegos</h2>
-<h3>Optimizados:</h3>
+<div class="wrap">
 
-<div class="list-container">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo card">
+      <div style="display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="mark">Alt </div>
+          <div>
+            <h1>AltProyects</h1>
+            <p>Descargas</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- CATEGORÍA 1 -->
-<div class="category active" id="cat1">
-  <div class="modpack" data-nombre="Minecraft Vulkan" data-tamano="0 MB" data-info="Dudas? @nether.studios" data-descripcion="Optimización De Vulkan, Para una de las versiones mas recientes." data-link="#">
-    <span>Minecraft 1.21.11 (Vulkan)</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Minecraft Sodium" data-tamano="10.77 MB" data-info="Dudas?, @nether.studios" data-descripcion="Optimización En Beta." data-link="https://www.mediafire.com/file/j5pl6yogm9ub847/Mods_FPS_Sodium.rar/file">
-    <span>Minecraft 1.21.11 (Sodium)</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Minecraft 1.20.1 OPTIMIZACION" data-tamano="38.50MB" data-info="Esta Version uso yo!, Dudas?, @nether.studios" data-descripcion="Optimizacion de 1.20.1 con VulkanMod." data-link="https://www.mediafire.com/file/3faw9mt9no2juzq/optimizacion_vulkan_1201.zip/file">
-    <span>Minecraft 1.20.1 (Vulkan) ¡NUEVO!</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Extra 2" data-tamano="-" data-info="Próximamente" data-descripcion="En desarrollo" data-link="#">
-    <span>Extra 2</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Extra 3" data-tamano="-" data-info="Próximamente" data-descripcion="En desarrollo" data-link="#">
-    <span>Extra 3</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-</div>
+    <div class="card servers">
+      <h3>Servidores</h3>
+      <p><strong>Bedrock (1.7 - 1.21.51):</strong></p>
+      <p style="color:var(--muted);font-size:13px">- IP: <strong>daNetherSMP.aternos.me</strong></p>
+      <p style="color:var(--muted);font-size:13px">- PUERTO: <strong>no se we, no esta disponible. (casi nada no estaba disponible dea XD)</strong></p>
+    </div>
 
-<!-- CATEGORÍA 2 -->
-<div class="category" id="cat2">
-  <div class="modpack" data-nombre="Geometry Dash 2.207" data-tamano="-" data-info="Próximamente" data-descripcion="No sera un mod :)" data-link="#">
-    <span>Geometry Dash 2.207 No Optimizado</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Placeholder 2" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-    <span>Bloque vacío</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Placeholder 3" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-    <span>Bloque vacío</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Placeholder 4" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-    <span>Bloque vacío</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Placeholder 5" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-    <span>Bloque vacío</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-</div>
+    <div class="card">
+      <h3>Redes</h3>
+      <div class="socials" role="navigation" aria-label="Redes sociales">
+        <a href="https://discord.gg" target="_blank" rel="noopener">Discord</a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://whatsapp.com" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://youtu.be" target="_blank" rel="noopener">Tiktok (unico disponible)</a>
+      </div>
+    </div>
 
-<!-- CATEGORÍA 3 -->
-<div class="category" id="cat3">
-  <div class="modpack" data-nombre="Placeholder A" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-    <span>Bloque vacío</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Placeholder B" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-    <span>Bloque vacío</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Placeholder C" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-    <span>Bloque vacío</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Placeholder D" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-    <span>Bloque vacío</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-  <div class="modpack" data-nombre="Placeholder E" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-    <span>Bloque vacío</span>
-    <button class="download-btn" onclick="openModal(this.parentElement)">Descargar</button>
-  </div>
-</div>
+    <div class="card" style="text-align:center">
+      <small style="color:var(--muted)">Aviso</small>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px">TikTok: <strong>@nether.studios</strong></p>
+    </div>
+  </aside>
 
-</div>
+  <!-- MAIN -->
+  <main class="main">
+    <div class="heading">
+      <h1>¡AltProyects!</h1>
+      <h2>Optimizaciones (mods) de juegos</h2>
+      <p style="color:var(--muted);margin-top:6px">Optimizados:</p>
+    </div>
 
-<div class="categories">
-  <button class="category-btn active" onclick="showCategory(1)">1</button>
-  <button class="category-btn" onclick="showCategory(2)">2</button>
-  <button class="category-btn" onclick="showCategory(3)">3</button>
-</div>
+    <div class="categories" role="tablist" aria-label="categorías">
+      <button class="category-btn active" onclick="showCategory(1)">1</button>
+      <button class="category-btn" onclick="showCategory(2)">2</button>
+      <button class="category-btn" onclick="showCategory(3)">3</button>
+    </div>
+
+    <div class="list-container">
+
+      <!-- CATEGORÍA 1 -->
+      <div class="category active" id="cat1">
+        <div class="modpack" data-nombre="Minecraft Vulkan" data-tamano="0 MB" data-info="Dudas? @nether.studios" data-descripcion="Optimización De Vulkan, Para una de las versiones mas recientes." data-link="#">
+          <div class="left">
+            <span>Minecraft 1.21.11 (Vulkan)</span>
+            <div class="meta"><small>Tamaño: 0 MB · Dudas? @nether.studios</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+
+        <div class="modpack" data-nombre="Minecraft Sodium" data-tamano="10.77 MB" data-info="Dudas?, @nether.studios" data-descripcion="Optimización En Beta." data-link="https://www.mediafire.com/file/j5pl6yogm9ub847/Mods_FPS_Sodium.rar/file">
+          <div class="left">
+            <span>Minecraft 1.21.11 (Sodium)</span>
+            <div class="meta"><small>Tamaño: 10.77 MB · Dudas?, @nether.studios</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+
+        <div class="modpack" data-nombre="Minecraft 1.20.1 OPTIMIZACION" data-tamano="38.50MB" data-info="Esta Version uso yo!, Dudas?, @nether.studios" data-descripcion="Optimizacion de 1.20.1 con VulkanMod." data-link="https://www.mediafire.com/file/3faw9mt9no2juzq/optimizacion_vulkan_1201.zip/file">
+          <div class="left">
+            <span>Minecraft 1.20.1 (Vulkan) ¡NUEVO!</span>
+            <div class="meta"><small>Tamaño: 38.50MB · Esta Version uso yo!, Dudas?, @nether.studios</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+
+        <div class="modpack" data-nombre="Geometry Dash 2.207 Android" data-tamano="-" data-info="Próximamente" data-descripcion="En desarrollo" data-link="#">
+          <div class="left">
+            <span>Geometry Dash 2.207 Android</span>
+            <div class="meta"><small>Tamaño:??? - Próximamente - En desarrollo</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+
+        <div class="modpack" data-nombre="Extra 3" data-tamano="-" data-info="Próximamente" data-descripcion="En desarrollo" data-link="#">
+          <div class="left">
+            <span>Extra 3</span>
+            <div class="meta"><small>Próximamente · En desarrollo</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORÍA 2 -->
+      <div class="category" id="cat2">
+        <div class="modpack" data-nombre="Placeholder 1" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
+          <div class="left">
+            <span>Bloque vacío</span>
+            <div class="meta"><small>Próximamente · No disponible</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+        <div class="modpack" data-nombre="Placeholder 2" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
+          <div class="left">
+            <span>Bloque vacío</span>
+            <div class="meta"><small>Próximamente · No disponible</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+        <div class="modpack" data-nombre="Placeholder 3" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
+          <div class="left">
+            <span>Bloque vacío</span>
+            <div class="meta"><small>Próximamente · No disponible</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+        <div class="modpack" data-nombre="Placeholder 4" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
+          <div class="left">
+            <span>Bloque vacío</span>
+            <div class="meta"><small>Próximamente · No disponible</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+        <div class="modpack" data-nombre="Placeholder 5" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
+          <div class="left">
+            <span>Bloque vacío</span>
+            <div class="meta"><small>Próximamente · No disponible</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORÍA 3 -->
+      <div class="category" id="cat3">
+        <div class="modpack" data-nombre="Placeholder A" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
+          <div class="left">
+            <span>Bloque vacío</span>
+            <div class="meta"><small>Próximamente · No disponible</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+        <div class="modpack" data-nombre="Placeholder B" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
+          <div class="left">
+            <span>Bloque vacío</span>
+            <div class="meta"><small>Próximamente · No disponible</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+        <div class="modpack" data-nombre="Placeholder C" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
+          <div class="left">
+            <span>Bloque vacío</span>
+            <div class="meta"><small>Próximamente · No disponible</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+        <div class="modpack" data-nombre="Placeholder D" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
+          <div class="left">
+            <span>Bloque vacío</span>
+            <div class="meta"><small>Próximamente · No disponible</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+        <div class="modpack" data-nombre="Placeholder E" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
+          <div class="left">
+            <span>Bloque vacío</span>
+            <div class="meta"><small>Próximamente · No disponible</small></div>
+          </div>
+          <div>
+            <button class="download-btn">Descargar</button>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- list-container -->
+
+    <footer>© AltProyects</footer>
+  </main>
+
+</div> <!-- wrap -->
 
 <!-- MODAL -->
 <div class="modal-bg" id="modalBg" onclick="closeModal(event)">
-  <div class="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="close" onclick="closeModal()">✖</div>
-    <p><b>Nombre:</b> <span id="nombre"></span></p>
-    <p><b>Tamaño:</b> <span id="tamano"></span></p>
-    <p><b>Info:</b> <span id="info"></span></p>
-    <p><b>Descripción:</b> <span id="descripcion"></span></p>
+    <p><strong id="modalTitle">Nombre:</strong> <span id="nombre"></span></p>
+    <p><strong>Tamaño:</strong> <span id="tamano"></span></p>
+    <p><strong>Info:</strong> <span id="info"></span></p>
+    <p><strong>Descripción:</strong> <span id="descripcion"></span></p>
     <button class="final-download" id="downloadBtn">Ir a la página</button>
   </div>
 </div>
 
 <script>
+/* Config: cambia a true si querés permitir redirecciones desde "Ir a la página" */
+const ENABLE_DOWNLOADS = true;
+const OPEN_IN_NEW_TAB = true;
+
 function showCategory(n){
   document.querySelectorAll('.category').forEach(c=>c.classList.remove('active'));
   document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('cat'+n).classList.add('active');
-  document.querySelectorAll('.category-btn')[n-1].classList.add('active');
-}
-
-function openModal(modpack){
-  nombre.textContent = modpack.dataset.nombre;
-  tamano.textContent = modpack.dataset.tamano;
-  info.textContent = modpack.dataset.info;
-  descripcion.textContent = modpack.dataset.descripcion;
-  downloadBtn.onclick = ()=>location.href = modpack.dataset.link;
-  modalBg.style.display = "flex";
+  const cat = document.getElementById('cat'+n);
+  if(cat) cat.classList.add('active');
+  const btns = document.querySelectorAll('.category-btn');
+  if(btns[n-1]) btns[n-1].classList.add('active');
 }
 
 function closeModal(e){
-  if(!e || e.target.id==="modalBg") modalBg.style.display="none";
+  if(!e || e.target.id === "modalBg"){
+    document.getElementById('modalBg').style.display = 'none';
+  }
 }
+
+document.querySelectorAll('.modpack').forEach(modpack=>{
+  const openBtn = modpack.querySelector('.download-btn');
+
+  openBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    document.getElementById('nombre').textContent = modpack.dataset.nombre || '';
+    document.getElementById('tamano').textContent = modpack.dataset.tamano || '';
+    document.getElementById('info').textContent = modpack.dataset.info || '';
+    document.getElementById('descripcion').textContent = modpack.dataset.descripcion || '';
+
+    const finalBtn = document.getElementById('downloadBtn');
+    finalBtn.textContent = "Ir a la página";
+    finalBtn.style.pointerEvents = 'auto';
+    finalBtn.style.opacity = '1';
+    finalBtn.style.cursor = 'pointer';
+    finalBtn.disabled = false;
+
+    const rawLink = (modpack.dataset.link || '').trim();
+
+    if(ENABLE_DOWNLOADS && rawLink && rawLink !== '#'){
+      finalBtn.onclick = function(ev){
+        ev && ev.preventDefault();
+        if(OPEN_IN_NEW_TAB){
+          window.open(rawLink, '_blank', 'noopener');
+        } else {
+          window.location.href = rawLink;
+        }
+      };
+    } else {
+      finalBtn.onclick = function(ev){
+        ev && ev.preventDefault();
+        // modo catálogo: no hace nada
+      };
+    }
+
+    document.getElementById('modalBg').style.display = 'flex';
+  });
+});
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape') closeModal();
+});
 </script>
 
 </body>
 </html>
-
-
 
 
