@@ -4,522 +4,234 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AltProyects</title>
-<style>
-  :root{
-    --bg-1:#000;
-    --bg-2:#4b0000;
-    --card:rgba(30,30,30,.85);
-    --accent:#ff5555;
-    --muted:#cfcfcf;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
-  body{
-    min-height:100vh;
-    background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
-    color:#fff;
-    padding:28px;
-    display:flex;
-    justify-content:center;
-  }
-  .wrap{
-    width:100%;
-    max-width:1100px;
-    display:grid;
-    grid-template-columns:320px 1fr;
-    gap:28px;
-    align-items:start;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AltProyects | La actualizacion UI</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --accent: #ff4d4d;
+            --accent-hover: #ff6666;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: rgba(255, 255, 255, 0.05);
+            --radius: 12px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
 
-  /* SIDEBAR */
-  .sidebar{position:sticky;top:28px}
-  .card{background:var(--card);padding:14px;border-radius:12px;margin-bottom:16px;box-shadow:0 6px 18px rgba(0,0,0,.45)}
-  .logo{display:flex;gap:12px;align-items:center;margin-bottom:8px}
-  .logo .mark{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#ff7777);display:flex;align-items:center;justify-content:center;font-weight:800;color:#111;font-size:18px;box-shadow:0 6px 16px rgba(0,0,0,.6)}
-  .logo h1{font-size:20px;color:var(--accent)}
-  .logo p{font-size:12px;color:var(--muted);margin-top:4px}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  .card h3{color:var(--accent);font-size:14px;margin-bottom:10px}
-  .servers p{font-size:13px;color:var(--muted);margin:6px 0}
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
 
-  .socials{display:flex;gap:8px;margin-top:8px}
-  .socials a{display:inline-flex;align-items:center;justify-content:center;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.04);background:rgba(255,255,255,.02);text-decoration:none;color:var(--muted);font-size:13px}
+        body {
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(255, 77, 77, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 100% 100%, rgba(255, 77, 77, 0.05) 0%, transparent 25%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
 
-  /* MAIN */
-  .main{}
-  .heading{margin-bottom:12px}
-  .heading h2{font-size:22px;color:var(--accent)}
-  .heading p{color:var(--muted);margin-top:6px;font-size:13px}
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+        }
 
-  .categories{display:flex;gap:8px;margin:16px 0 18px}
-  .category-btn{padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.06);background:transparent;color:var(--muted);cursor:pointer;font-weight:700;font-size:13px}
-  .category-btn.active{background:var(--accent);color:#111;border-color:var(--accent)}
+        /* --- SIDEBAR --- */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .glass-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
 
-  .list-container{display:flex;flex-direction:column;gap:12px}
+        .brand { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; }
+        .brand-logo {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, var(--accent), #b30000);
+            border-radius: 10px;
+            display: grid; place-items: center;
+            font-weight: bold; font-size: 20px;
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+        }
 
-  .modpack{display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.02)}
-  .modpack span{font-weight:700}
-  .meta{color:var(--muted);font-size:12px;margin-top:6px}
-  .left{display:flex;flex-direction:column;gap:6px}
+        .nav-list { list-style: none; margin-top: 10px; }
+        .nav-item {
+            padding: 12px; border-radius: 8px; color: var(--text-dim);
+            cursor: pointer; transition: 0.2s; margin-bottom: 5px; font-weight: 500;
+        }
+        .nav-item:hover, .nav-item.active { background: rgba(255, 77, 77, 0.1); color: var(--accent); }
 
-  .download-btn{padding:10px 16px;border-radius:8px;border:none;background:var(--accent);color:#111;font-weight:800;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.45)}
-  .download-btn:hover{transform:translateY(-2px)}
-  .download-btn.disabled{background:#444;color:#bbb;cursor:not-allowed;box-shadow:none;transform:none;opacity:0.75}
+        /* --- MAIN CONTENT --- */
+        .content-header { margin-bottom: 25px; animation: fadeIn 0.5s ease-out; }
+        .content-header h2 { font-size: 28px; margin-bottom: 5px; }
+        .grid-downloads { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 
-  /* modal */
-  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:999}
-  .modal{width:92%;max-width:420px;background:#151515;padding:18px;border-radius:12px}
-  .modal .close{color:var(--accent);text-align:right;cursor:pointer;font-weight:800}
-  .modal p{color:var(--muted);margin:8px 0;font-size:14px}
-  .final-download{margin-top:12px;width:100%;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#111;font-weight:800;cursor:pointer}
+        .download-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; justify-content: space-between;
+            animation: fadeIn 0.5s ease-out backwards;
+        }
+        .download-card:hover { transform: translateY(-8px); border-color: rgba(255, 77, 77, 0.3); }
 
-  footer{margin-top:26px;color:var(--muted);font-size:13px;text-align:center;grid-column:1/-1}
+        .tag {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+            background: rgba(255, 77, 77, 0.1); color: var(--accent);
+            padding: 4px 8px; border-radius: 4px; display: inline-block; margin-bottom: 12px;
+        }
 
-  @media(max-width:880px){
-    .wrap{grid-template-columns:1fr; padding:0 8px}
-    .sidebar{position:relative;top:0}
-  }
+        .download-card h3 { margin-bottom: 10px; font-size: 18px; }
+        .download-card p { font-size: 14px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.5; }
 
-  /* ---------------------------
-     ANIMACIONES Y EFECTOS NUEVOS
-     --------------------------- */
+        .btn-main {
+            background: var(--accent); color: #000; border: none;
+            padding: 12px; border-radius: 8px; font-weight: 800;
+            cursor: pointer; transition: 0.2s; text-align: center; text-decoration: none;
+        }
+        .btn-main:hover { background: var(--accent-hover); box-shadow: 0 0 20px rgba(255, 77, 77, 0.4); }
 
-  /* Baseline oculto para elementos animables (aparece como efecto de entrada) */
-  .logo, .card, .heading, .category-btn, .modpack {
-    opacity: 0;
-    transform: translateY(10px) scale(0.995);
-    transition: opacity .45s cubic-bezier(.2,.9,.3,1), transform .45s cubic-bezier(.2,.9,.3,1), box-shadow .25s ease;
-    will-change: opacity, transform;
-  }
+        /* --- MODAL ESTILO --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background: var(--surface); border: 1px solid var(--accent);
+            padding: 30px; border-radius: var(--radius); max-width: 400px;
+            text-align: center; box-shadow: var(--shadow);
+            animation: fadeIn 0.3s ease-out;
+        }
+        .modal-content p { margin-bottom: 20px; font-size: 16px; line-height: 1.4; }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+        .btn-secondary { color: var(--text-dim); text-decoration: underline; font-size: 12px; cursor: pointer; background: none; border: none; }
 
-  /* Clase que se añade para mostrar elementos (stagger) */
-  .reveal-visible {
-    opacity: 1 !important;
-    transform: none !important;
-  }
+        /* SECCIONES */
+        .section { display: none; }
+        .section.active { display: block; }
 
-  /* Animación flotante del logo/mark */
-  @keyframes float-mark {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-    100% { transform: translateY(0); }
-  }
-  .logo .mark {
-    animation: float-mark 3.6s ease-in-out infinite;
-    transform-origin: center;
-  }
-
-  /* Hover sutil en modpacks */
-  .modpack:hover {
-    transform: translateY(-6px) scale(1.01);
-    box-shadow: 0 14px 30px rgba(0,0,0,.55);
-  }
-
-  /* Efecto "shine" en botones de descarga */
-  .download-btn {
-    position: relative;
-    overflow: hidden;
-    transition: transform .18s ease, box-shadow .18s ease;
-  }
-  .download-btn::after{
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.0) 50%, rgba(255,255,255,0.06) 100%);
-    transform: translateX(-110%) skewX(-12deg);
-    transition: transform .6s cubic-bezier(.2,.8,.2,1);
-    pointer-events: none;
-  }
-  .download-btn:hover::after{
-    transform: translateX(110%) skewX(-12deg);
-  }
-
-  /* Subrayado animado en categoría activa */
-  .category-btn {
-    position: relative;
-    overflow: visible;
-  }
-  .category-btn::after{
-    content: "";
-    position: absolute;
-    left: 12%;
-    right: 12%;
-    bottom: -8px;
-    height: 3px;
-    background: linear-gradient(90deg,var(--accent),#ff7777);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform .28s cubic-bezier(.2,.9,.3,1);
-    border-radius: 6px;
-    opacity: 0.95;
-  }
-  .category-btn.active::after{ transform: scaleX(1); }
-
-  /* Modal: escalado y fade-in efectivo cuando se abre vía display:flex (se detecta style inline) */
-  .modal { transform: translateY(8px) scale(.98); opacity: 0; transition: transform .18s ease, opacity .18s ease; }
-  .modal-bg[style*="display: flex"] .modal { transform: none; opacity: 1; }
-
-  /* Mejora de contraste para títulos con acento */
-  .heading h1 { letter-spacing: 0.4px; }
-  .card h3 { letter-spacing: 0.3px; }
-
-  /* Respecto a usuarios que prefieren reducir movimiento */
-  @media (prefers-reduced-motion: reduce) {
-    .logo .mark { animation: none; }
-    .logo, .card, .heading, .category-btn, .modpack, .modal { transition: none !important; transform: none !important; opacity: 1 !important; }
-    .download-btn::after { transition: none; transform: none; opacity: 0; }
-  }
-
-</style>
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } .sidebar { order: 2; } }
+    </style>
 </head>
 <body>
 
-<div class="wrap">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="logo card">
-      <div style="display:flex;flex-direction:column">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div class="mark">Alt </div>
-          <div>
-            <h1>AltProyects</h1>
-            <p>Descargas</p>
-          </div>
+<div id="downloadModal" class="modal-overlay">
+    <div class="modal-content">
+        <p>Que onda, todo joya? bueno t aviso q nada tiene virus y si hay algo q te detecta debe ser alguna tonteria no se, yo todo esto lo saque de mi propia pc y ademas para que voy a querer su informacion?</p>
+        <div class="btn-group">
+            <a id="confirmDownload" href="#" target="_blank" class="btn-main" onclick="closeModal()">Descargar de todos modos</a>
+            <button class="btn-secondary" onclick="closeModal()">Cerrar</button>
         </div>
-      </div>
     </div>
+</div>
 
-    <div class="card servers">
-      <h3>Servidores</h3>
-      <p><strong>Bedrock (1.7 - 1.21.51):</strong></p>
-      <p style="color:var(--muted);font-size:13px">- IP: <strong>daNetherSMP.aternos.me</strong></p>
-      <p style="color:var(--muted);font-size:13px">- PUERTO: <strong>no se we, no esta disponible. (casi nada no estaba disponible dea XD)</strong></p>
-    </div>
-
-    <div class="card">
-      <h3>Redes</h3>
-      <div class="socials" role="navigation" aria-label="Redes sociales">
-        <a href="https://discord.gg" target="_blank" rel="noopener">Discord</a>
-        <a href="https://www.youtube.com" target="_blank" rel="noopener">YouTube</a>
-        <a href="https://whatsapp.com" target="_blank" rel="noopener">WhatsApp</a>
-        <a href="https://youtu.be" target="_blank" rel="noopener">Tiktok (unico disponible)</a>
-      </div>
-    </div>
-
-    <div class="card" style="text-align:center">
-      <small style="color:var(--muted)">Aviso</small>
-      <p style="font-size:12px;color:var(--muted);margin-top:8px">TikTok: <strong>@nether.studios</strong></p>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main">
-    <div class="heading">
-      <h1>¡AltProyects!</h1>
-      <h2>Boludeces de juegos, Etc.</h2>
-      <p style="color:var(--muted);margin-top:6px">Optimizados:</p>
-    </div>
-
-    <div class="categories" role="tablist" aria-label="categorías">
-      <button class="category-btn active" onclick="showCategory(1)">1</button>
-      <button class="category-btn" onclick="showCategory(2)">2</button>
-      <button class="category-btn" onclick="showCategory(3)">3</button>
-    </div>
-
-    <div class="list-container">
-
-      <!-- CATEGORÍA 1 -->
-      <div class="category active" id="cat1">
-        <div class="modpack" data-nombre="Minecraft Vulkan" data-tamano="0 MB" data-info="Dudas? @nether.studios" data-descripcion="Optimización De Vulkan, Para una de las versiones mas recientes." data-link="#">
-          <div class="left">
-            <span>Minecraft 1.21.11 (Vulkan)</span>
-            <div class="meta"><small>Tamaño: 0 MB · Dudas? @nether.studios</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
+<div class="container">
+    <aside class="sidebar">
+        <div class="glass-card">
+            <div class="brand">
+                <div class="brand-logo">Alt</div>
+                <div><h1 style="font-size: 18px;">AltProyects</h1><span style="font-size: 12px; color: var(--text-dim);">3.1.1 UI REWORK</span></div>
+            </div>
         </div>
+        <div class="glass-card">
+            <h4 style="font-size: 12px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase;">Menú Principal</h4>
+            <nav class="nav-list">
+                <li class="nav-item active" onclick="switchTab('home')">Inicio🏠</li>
+                <li class="nav-item" onclick="switchTab('minecraft')">Minecraft⛏️</li>
+                <li class="nav-item" onclick="switchTab('android')">Android📱</li>
+                <li class="nav-item" onclick="switchTab('info')">Info miaℹ️</li>
+            </nav>
+        </div>
+    </aside>
 
-        <div class="modpack" data-nombre="Minecraft Sodium" data-tamano="10.77 MB" data-info="Dudas?, @nether.studios" data-descripcion="Optimización En Beta." data-link="https://www.mediafire.com/file/j5pl6yogm9ub847/Mods_FPS_Sodium.rar/file">
-          <div class="left">
-            <span>Minecraft 1.21.11 (Sodium)</span>
-            <div class="meta"><small>Tamaño: 10.77 MB · Dudas?, @nether.studios</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
+    <main class="main-content">
+        <section id="home" class="section active">
+            <div class="content-header"><h2>Lo Mas Nuevo de la Pagina! :D</h2><p>Cosas Destacadas Buenardas...</p></div>
+            <div class="grid-downloads">
+                <div class="download-card">
+                    <div><span class="tag">Destacado</span><h3>Minecraft Vulkan 1.20.1</h3><p>JAVA - SOLO PC - MINECRAFT - VULKAN </p></div>
+                    <button class="btn-main" onclick="openModal('https://www.mediafire.com/file/mlfiepwadxdny4t/optimizacion_vulkan_1201.zip/file')">Descargar YA</button>
+                </div>
+                <div class="download-card"><div><span class="tag">---</span><h3>Placeholder #1</h3><p>Contenido próximamente disponible en la plataforma.</p></div><button class="btn-main" onclick="openModal('#')">Descargar</button></div>
+                <div class="download-card"><div><span class="tag">---</span><h3>Placeholder #2</h3><p>Contenido próximamente disponible en la plataforma.</p></div><button class="btn-main" onclick="openModal('#')">Descargar</button></div>
+                <div class="download-card"><div><span class="tag">---</span><h3>Placeholder #3</h3><p>Contenido próximamente disponible en la plataforma.</p></div><button class="btn-main" onclick="openModal('#')">Descargar</button></div>
+            </div>
+        </section>
 
-        <div class="modpack" data-nombre="Minecraft 1.20.1 OPTIMIZACION" data-tamano="38.50MB" data-info="Esta Version uso yo!, Dudas?, @nether.studios" data-descripcion="Optimizacion de 1.20.1 con VulkanMod." data-link="https://www.mediafire.com/file/3faw9mt9no2juzq/optimizacion_vulkan_1201.zip/file">
-          <div class="left">
-            <span>Minecraft 1.20.1 (Vulkan)</span>
-            <div class="meta"><small>Tamaño: 38.50MB · Esta Version uso yo!, Dudas?, @nether.studios</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
+        <section id="minecraft" class="section">
+            <div class="content-header"><h2>Optimización Para Minecraft ⛏️</h2.</p></div>
+            <div class="grid-downloads">
+                <div class="download-card">
+                    <div><span class="tag">Sodium</span><h3>Minecraft 1.21.11 Sodium </h3><p>JAVA - SOLO PC - MINECRAFT - SODIUM</p></div>
+                    <button class="btn-main" onclick="openModal('https://www.mediafire.com/file/j5pl6yogm9ub847/Mods_FPS_Sodium.rar/file')">Descargar</button>
+                </div>
+                <div class="download-card"><div><span class="tag">VULKAN</span><h3>Minecraft Vulkan 1.20.1</h3><p>JAVA - SOLO PC - MINECRAFT - VULKAN</p></div><button class="btn-main" onclick="openModal('https://www.mediafire.com/file/mlfiepwadxdny4t/optimizacion_vulkan_1201.zip/file')">Descargar</button></div>
+            </div>
+        </section>
 
-        <div class="modpack" data-nombre="Geometry Dash 2.207 Android" data-tamano="145.03MB" data-info="Dudas?, @nether.studios" data-descripcion="Esta es la primera APP de android en la pagina!" data-link="https://www.mediafire.com/file/n0fdjdudtoptkbn/GeometryDash2207.apks/file">
-          <div class="left">
-            <span>Geometry Dash 2.207 Android (¡Nuevo!)</span>
-            <div class="meta"><small>Tamaño: 145.03MB - Android - No Optimizado</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
+        <section id="android" class="section">
+            <div class="content-header"><h2>Apps Android 📱</h2><p>Pura cosa para celular.</p></div>
+            <div class="grid-downloads">
+                <div class="download-card">
+                    <div><span class="tag">Juego</span><h3>Geometry Dash 2.207</h3><p>Full APK Compatible con Accounts del Juego etc..</p></div>
+                    <button class="btn-main" onclick="openModal('https://www.mediafire.com/file/n0fdjdudtoptkbn/GeometryDash2207.apks/file')">Descargar APK</button>
+                </div>
+            </div>
+        </section>
 
-        <div class="modpack" data-nombre="Optifine Bedrock" data-tamano="7.21MB" data-info="Dudas? @nether.studios" data-descripcion="Terminado, es simple, pero eficiente." data-link="https://www.mediafire.com/file/c59hf81tpx7rwg6/Optifine%252B%252B_v6.1.1.mcpack/file">
-          <div class="left">
-            <span>Optifine BEDROCK (¡Nuevo!)</span>
-            <div class="meta"><small>MCPACK · Necesitas el JUEGO</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- CATEGORÍA 2 -->
-      <div class="category" id="cat2">
-        <div class="modpack" data-nombre="Placeholder 1" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-          <div class="left">
-            <span>Bloque vacío</span>
-            <div class="meta"><small>Próximamente · No disponible</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
-        <div class="modpack" data-nombre="Placeholder 2" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-          <div class="left">
-            <span>Bloque vacío</span>
-            <div class="meta"><small>Próximamente · No disponible</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
-        <div class="modpack" data-nombre="Placeholder 3" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-          <div class="left">
-            <span>Bloque vacío</span>
-            <div class="meta"><small>Próximamente · No disponible</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
-        <div class="modpack" data-nombre="Placeholder 4" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-          <div class="left">
-            <span>Bloque vacío</span>
-            <div class="meta"><small>Próximamente · No disponible</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
-        <div class="modpack" data-nombre="Placeholder 5" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-          <div class="left">
-            <span>Bloque vacío</span>
-            <div class="meta"><small>Próximamente · No disponible</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- CATEGORÍA 3 -->
-      <div class="category" id="cat3">
-        <div class="modpack" data-nombre="Placeholder A" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-          <div class="left">
-            <span>Bloque vacío</span>
-            <div class="meta"><small>Próximamente · No disponible</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
-        <div class="modpack" data-nombre="Placeholder B" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-          <div class="left">
-            <span>Bloque vacío</span>
-            <div class="meta"><small>Próximamente · No disponible</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
-        <div class="modpack" data-nombre="Placeholder C" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-          <div class="left">
-            <span>Bloque vacío</span>
-            <div class="meta"><small>Próximamente · No disponible</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
-        <div class="modpack" data-nombre="Placeholder D" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-          <div class="left">
-            <span>Bloque vacío</span>
-            <div class="meta"><small>Próximamente · No disponible</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
-        <div class="modpack" data-nombre="Placeholder E" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-          <div class="left">
-            <span>Bloque vacío</span>
-            <div class="meta"><small>Próximamente · No disponible</small></div>
-          </div>
-          <div>
-            <button class="download-btn">Descargar</button>
-          </div>
-        </div>
-      </div>
-
-    </div> <!-- list-container -->
-
-    <div class="modpack" data-nombre="Placeholder E" data-tamano="-" data-info="Próximamente" data-descripcion="No disponible" data-link="#">
-      <div class="left">
-        <span>Bloque vacío</span>
-        <div class="meta"><small>Próximamente · No disponible</small></div>
-      </div>
-      <div>
-        <button class="download-btn">Descargar</button>
-      </div>
-    </div>
-
-  </main>
-
-</div> <!-- wrap -->
-
-<!-- MODAL -->
-<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="close" onclick="closeModal()">✖</div>
-    <p><strong id="modalTitle">Nombre:</strong> <span id="nombre"></span></p>
-    <p><strong>Tamaño:</strong> <span id="tamano"></span></p>
-    <p><strong>Info:</strong> <span id="info"></span></p>
-    <p><strong>Descripción:</strong> <span id="descripcion"></span></p>
-    <button class="final-download" id="downloadBtn">Ir a la página</button>
-  </div>
+        <section id="info" class="section">
+            <div class="glass-card">
+                <h3 style="color: var(--accent); margin-bottom: 15px;">📡 Nether SMP</h3>
+                <p><strong>IP:</strong> daNetherSMP.aternos.me</p>
+                <p style="margin-top: 10px;">Estado: roto we, paso 1 mes :v</p>
+            </div>
+        </section>
+    </main>
 </div>
 
 <script>
-/* Config: cambia a true si querés permitir redirecciones desde "Ir a la página" */
-const ENABLE_DOWNLOADS = true;
-const OPEN_IN_NEW_TAB = true;
-
-function showCategory(n){
-  document.querySelectorAll('.category').forEach(c=>c.classList.remove('active'));
-  document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
-  const cat = document.getElementById('cat'+n);
-  if(cat) cat.classList.add('active');
-  const btns = document.querySelectorAll('.category-btn');
-  if(btns[n-1]) btns[n-1].classList.add('active');
-}
-
-function closeModal(e){
-  if(!e || e.target.id === "modalBg"){
-    document.getElementById('modalBg').style.display = 'none';
-  }
-}
-
-document.querySelectorAll('.modpack').forEach(modpack=>{
-  const openBtn = modpack.querySelector('.download-btn');
-
-  openBtn.addEventListener('click', (e)=>{
-    e.preventDefault();
-    document.getElementById('nombre').textContent = modpack.dataset.nombre || '';
-    document.getElementById('tamano').textContent = modpack.dataset.tamano || '';
-    document.getElementById('info').textContent = modpack.dataset.info || '';
-    document.getElementById('descripcion').textContent = modpack.dataset.descripcion || '';
-
-    const finalBtn = document.getElementById('downloadBtn');
-    finalBtn.textContent = "Ir a la página";
-    finalBtn.style.pointerEvents = 'auto';
-    finalBtn.style.opacity = '1';
-    finalBtn.style.cursor = 'pointer';
-    finalBtn.disabled = false;
-
-    const rawLink = (modpack.dataset.link || '').trim();
-
-    if(ENABLE_DOWNLOADS && rawLink && rawLink !== '#'){
-      finalBtn.onclick = function(ev){
-        ev && ev.preventDefault();
-        if(OPEN_IN_NEW_TAB){
-          window.open(rawLink, '_blank', 'noopener');
-        } else {
-          window.location.href = rawLink;
-        }
-      };
-    } else {
-      finalBtn.onclick = function(ev){
-        ev && ev.preventDefault();
-        // modo catálogo: no hace nada
-      };
+    function switchTab(tabId) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
     }
 
-    document.getElementById('modalBg').style.display = 'flex';
-  });
-});
+    // --- FUNCIONES DEL MODAL ---
+    function openModal(url) {
+        const modal = document.getElementById('downloadModal');
+        const confirmBtn = document.getElementById('confirmDownload');
+        confirmBtn.href = url;
+        modal.style.display = 'flex';
+    }
 
-document.addEventListener('keydown', (e)=>{
-  if(e.key === 'Escape') closeModal();
-});
-</script>
+    function closeModal() {
+        document.getElementById('downloadModal').style.display = 'none';
+    }
 
-<!-- SCRIPT ADICIONAL: aplica staggered reveal y mejoras visuales sin tocar textos -->
-<script>
-  (function(){
-    // Esperar que DOM esté listo
-    function ready(fn){ if(document.readyState!='loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
-
-    ready(function(){
-      // Elementos a animar
-      const els = Array.from(document.querySelectorAll('.logo, .card, .heading, .category-btn, .modpack'));
-      // Stagger corto (ms)
-      const baseDelay = 60;
-      els.forEach((el, i) => {
-        // Forzamos hardware acceleration hint
-        el.style.willChange = 'opacity, transform';
-        // Dejamos un pequeño delay escalonado
-        setTimeout(() => {
-          el.classList.add('reveal-visible');
-        }, i * baseDelay);
-      });
-
-      // Mejora: cuando se hace click en una categoría, animar su contenido
-      document.querySelectorAll('.category-btn').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          // pequeña animación al botón (scale)
-          btn.animate([{ transform: 'scale(0.98)' }, { transform: 'scale(1)' }], { duration: 180, easing: 'cubic-bezier(.2,.9,.3,1)' });
-          // re-aplicar reveal a los modpacks visibles para efecto de entrada
-          const visiblePacks = document.querySelectorAll('.category.active .modpack');
-          visiblePacks.forEach((p, idx) => {
-            p.classList.remove('reveal-visible');
-            setTimeout(()=> p.classList.add('reveal-visible'), 80 + idx * 40);
-          });
-        });
-      });
-
-      // Añadir un pequeño efecto visual en focus (accesibilidad)
-      document.querySelectorAll('button, a').forEach(el=>{
-        el.addEventListener('focus', () => el.classList.add('reveal-visible'));
-      });
-
-      // Si el usuario prefiere reducir movimiento, no hacer stagger (dejar todo visible)
-      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if(mq.matches){
-        els.forEach(el=> el.classList.add('reveal-visible'));
-      }
-    });
-  })();
+    // Cerrar si clickean fuera del cuadro
+    window.onclick = function(event) {
+        const modal = document.getElementById('downloadModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
 </script>
 
 </body>
