@@ -1,287 +1,319 @@
 <!DOCTYPE html> 
- <html lang="es"> 
- <head> 
-     <meta charset="UTF-8"> 
-     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-     <title>AltProyects | ???</title> 
-     <style> 
-         :root { 
-             --bg: #0a0a0a; 
-             --surface: #141414; 
-             --accent: #ff4d4d; 
-             --accent-hover: #ff6666; 
-             --text-main: #ffffff; 
-             --text-dim: #a0a0a0; 
-             --border: rgba(255, 255, 255, 0.05); 
-             --radius: 12px; 
-             --shadow: 0 8px 32px rgba(0, 0, 0, 0.5); 
-         } 
+<html lang="es"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>AltProyects | 3.2.2</title> 
+    <style> 
+        :root { 
+            --bg: #050505; 
+            --surface: rgba(20, 20, 20, 0.8); 
+            --accent: #ff4d4d; 
+            --accent-hover: #ff6666; 
+            --text-main: #ffffff; 
+            --text-dim: #a0a0a0; 
+            --border: rgba(255, 255, 255, 0.05); 
+            --radius: 12px; 
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5); 
+        } 
 
-         @keyframes fadeIn { 
-             from { opacity: 0; transform: translateY(10px); } 
-             to { opacity: 1; transform: translateY(0); } 
-         } 
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; } 
 
-         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; } 
+        /* --- FONDO DINÁMICO RE FACHA --- */
+        body { 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            padding: 20px; 
+            overflow-x: hidden;
+            position: relative;
+        } 
 
-         body { 
-             background-color: var(--bg); 
-             background-image:  
-                 radial-gradient(circle at 0% 0%, rgba(255, 77, 77, 0.05) 0%, transparent 25%), 
-                 radial-gradient(circle at 100% 100%, rgba(255, 77, 77, 0.05) 0%, transparent 25%); 
-             color: var(--text-main); 
-             min-height: 100vh; 
-             display: flex; 
-             justify-content: center; 
-             padding: 20px; 
-         } 
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 77, 77, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 77, 77, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(20, 0, 0, 1) 0%, transparent 100%);
+            z-index: -1;
+            animation: bgShift 10s ease-in-out infinite alternate;
+        }
 
-         .container { 
-             width: 100%; 
-             max-width: 1200px; 
-             display: grid; 
-             grid-template-columns: 280px 1fr; 
-             gap: 24px; 
-         } 
+        @keyframes bgShift {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.1) translate(2%, 2%); }
+        }
 
-         /* --- SIDEBAR --- */ 
-         .sidebar { display: flex; flex-direction: column; gap: 20px; } 
-         .glass-card { 
-             background: var(--surface); 
-             border: 1px solid var(--border); 
-             border-radius: var(--radius); 
-             padding: 20px; 
-             box-shadow: var(--shadow); 
-         } 
+        /* --- ESTRUCTURA --- */
+        .container { 
+            width: 100%; 
+            max-width: 1200px; 
+            display: grid; 
+            grid-template-columns: 280px 1fr; 
+            gap: 24px; 
+            z-index: 1;
+        } 
 
-         .brand { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; } 
-         .brand-logo { 
-             width: 50px; height: 50px; 
-             background: linear-gradient(135deg, var(--accent), #b30000); 
-             border-radius: 10px; 
-             display: grid; place-items: center; 
-             font-weight: bold; font-size: 20px; 
-             box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3); 
-         } 
+        .sidebar { display: flex; flex-direction: column; gap: 20px; } 
+        .glass-card { 
+            background: var(--surface); 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius); 
+            padding: 20px; 
+            box-shadow: var(--shadow); 
+            backdrop-filter: blur(10px);
+            animation: slideInUp 0.6s ease-out both;
+        } 
 
-         .nav-list { list-style: none; margin-top: 10px; } 
-         .nav-item { 
-             padding: 12px; border-radius: 8px; color: var(--text-dim); 
-             cursor: pointer; transition: 0.2s; margin-bottom: 5px; font-weight: 500; 
-         } 
-         .nav-item:hover, .nav-item.active { background: rgba(255, 77, 77, 0.1); color: var(--accent); } 
+        .brand { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; } 
+        .brand-logo { 
+            width: 50px; height: 50px; 
+            background: linear-gradient(135deg, var(--accent), #b30000); 
+            border-radius: 10px; 
+            display: grid; place-items: center; 
+            font-weight: bold; font-size: 20px; 
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3); 
+            animation: pulseGlow 3s infinite ease-in-out;
+        } 
 
-         /* --- MAIN CONTENT --- */ 
-         .content-header { margin-bottom: 25px; animation: fadeIn 0.5s ease-out; } 
-         .content-header h2 { font-size: 28px; margin-bottom: 5px; } 
+        .nav-list { list-style: none; margin-top: 10px; } 
+        .nav-item { 
+            padding: 12px; border-radius: 8px; color: var(--text-dim); 
+            cursor: pointer; transition: 0.2s; margin-bottom: 5px; font-weight: 500; 
+        } 
+        .nav-item:hover, .nav-item.active { background: rgba(255, 77, 77, 0.1); color: var(--accent); } 
 
-         /* --- ESTILO LISTA (DE LA FOTO) --- */
-         .category-list {
-             display: flex;
-             flex-direction: column;
-             background: var(--surface);
-             border: 1px solid var(--border);
-             border-radius: var(--radius);
-             overflow: hidden;
-             margin-bottom: 20px;
-         }
+        /* --- MAIN CONTENT --- */ 
+        .content-header { margin-bottom: 25px; animation: fadeIn 0.5s ease-out; } 
+        .content-header h2 { font-size: 28px; margin-bottom: 5px; } 
 
-         .category-title {
-             padding: 15px 20px;
-             background: rgba(255, 255, 255, 0.02);
-             border-bottom: 1px solid var(--border);
-             font-size: 14px;
-             font-weight: bold;
-             color: var(--text-dim);
-             display: flex;
-             align-items: center;
-             gap: 10px;
-         }
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
 
-         .list-item {
-             display: flex;
-             justify-content: space-between;
-             align-items: center;
-             padding: 15px 20px;
-             border-bottom: 1px solid var(--border);
-             cursor: pointer;
-             transition: 0.2s;
-         }
+        .category-title {
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-         .list-item:hover { background: rgba(255, 77, 77, 0.05); }
-         .list-item:last-child { border-bottom: none; }
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideInUp 0.5s ease-out both;
+        }
 
-         .list-item-name { font-size: 15px; font-weight: 500; }
-         
-         .mini-tag {
-             font-size: 10px;
-             background: rgba(255, 255, 255, 0.1);
-             padding: 2px 6px;
-             border-radius: 4px;
-             color: var(--text-dim);
-             text-transform: uppercase;
-         }
+        .list-item:hover { 
+            background: rgba(255, 77, 77, 0.1) !important; 
+            transform: translateX(10px) scale(1.01);
+            border-left: 4px solid var(--accent);
+        }
+        .list-item:last-child { border-bottom: none; }
 
-         /* --- MODAL ESTILO --- */ 
-         .modal-overlay { 
-             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-             background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); 
-             display: none; justify-content: center; align-items: center; z-index: 1000; 
-         } 
-         .modal-content { 
-             background: var(--surface); border: 1px solid var(--accent); 
-             padding: 30px; border-radius: var(--radius); max-width: 400px; 
-             text-align: center; box-shadow: var(--shadow); 
-             animation: fadeIn 0.3s ease-out; 
-         } 
-         .modal-content p { margin-bottom: 20px; font-size: 16px; line-height: 1.4; } 
-         .btn-group { display: flex; flex-direction: column; gap: 10px; } 
+        .list-item-name { font-size: 15px; font-weight: 500; } 
+        
+        .mini-tag {
+            font-size: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
 
-         .btn-secondary { color: var(--text-dim); text-decoration: underline; font-size: 12px; cursor: pointer; background: none; border: none; } 
+        /* --- ANIMACIONES --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); filter: blur(10px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3); } 50% { box-shadow: 0 4px 25px rgba(255, 77, 77, 0.6); } }
 
-         .btn-main { 
-             background: var(--accent); color: #000; border: none; 
-             padding: 12px; border-radius: 8px; font-weight: 800; 
-             cursor: pointer; transition: 0.2s; text-align: center; text-decoration: none; 
-         } 
-         .btn-main:hover { background: var(--accent-hover); box-shadow: 0 0 20px rgba(255, 77, 77, 0.4); } 
+        /* Stagger para la lista */
+        .list-item:nth-child(1) { animation-delay: 0.1s; }
+        .list-item:nth-child(2) { animation-delay: 0.2s; }
+        .list-item:nth-child(3) { animation-delay: 0.3s; }
+        .list-item:nth-child(4) { animation-delay: 0.4s; }
 
-         /* SECCIONES */ 
-         .section { display: none; } 
-         .section.active { display: block; } 
+        /* MODAL */ 
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); 
+            display: none; justify-content: center; align-items: center; z-index: 1000; 
+        } 
+        .modal-content { 
+            background: var(--surface); border: 1px solid var(--accent); 
+            padding: 30px; border-radius: var(--radius); max-width: 400px; 
+            text-align: center; box-shadow: var(--shadow); 
+            animation: fadeIn 0.3s ease-out; 
+        } 
+        .btn-main { 
+            background: var(--accent); color: #000; border: none; 
+            padding: 12px; border-radius: 8px; font-weight: 800; 
+            cursor: pointer; transition: 0.2s; text-align: center; text-decoration: none; 
+        } 
+        .btn-main:hover { background: var(--accent-hover); box-shadow: 0 0 20px rgba(255, 77, 77, 0.4); } 
+        .btn-secondary { color: var(--text-dim); text-decoration: underline; font-size: 12px; cursor: pointer; background: none; border: none; margin-top: 10px; }
 
-         @media (max-width: 900px) { .container { grid-template-columns: 1fr; } .sidebar { order: 2; } } 
-     </style> 
- </head> 
- <body> 
+        .section { display: none; } 
+        .section.active { display: block; } 
 
- <div id="downloadModal" class="modal-overlay"> 
-     <div class="modal-content"> 
-         <p>Que onda, todo joya? bueno t aviso q nada tiene virus y si hay algo q te detecta debe ser alguna tonteria no se, yo todo esto lo saque de mi propia pc y ademas para que voy a querer su informacion?</p> 
-         <div class="btn-group"> 
-             <a id="confirmDownload" href="#" target="_blank" class="btn-main" onclick="closeModal()">Descargar de todos modos</a> 
-             <button class="btn-secondary" onclick="closeModal()">Cerrar</button> 
-         </div> 
-     </div> 
- </div> 
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } .sidebar { order: 2; } } 
+    </style> 
+</head> 
+<body> 
 
- <div class="container"> 
-     <aside class="sidebar"> 
-         <div class="glass-card"> 
-             <div class="brand"> 
-                 <div class="brand-logo">Alt</div> 
-                 <div><h1 style="font-size: 18px;">AltProyects</h1><span style="font-size: 12px; color: var(--text-dim);">3.2.1 Parche Pequeño + Juego</span></div> 
-             </div> 
-         </div> 
-         <div class="glass-card"> 
-             <h4 style="font-size: 12px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase;">Menú Principal</h4> 
-             <nav class="nav-list"> 
-                 <li class="nav-item active" onclick="switchTab('home')">Inicio🏠</li> 
-                 <li class="nav-item" onclick="switchTab('minecraft')">Minecraft⛏️</li> 
-                 <li class="nav-item" onclick="switchTab('android')">Android📱</li> 
-                 <li class="nav-item" onclick="switchTab('info')">Info miaℹ️</li> 
-             </nav> 
-         </div> 
-     </aside> 
+<div id="downloadModal" class="modal-overlay"> 
+    <div class="modal-content"> 
+        <p>Que onda!, te aviso que mis archivos y juegos casi todos estan testeados y verificados en malwarebytes, libres de virus peligrosos y raros, si tu antivirus lanza que tiene virus es un falso positivo, es todo sacado de mi propia pc y tambien, no quiero su informacion.</p> 
+        <div class="btn-group" style="display: flex; flex-direction: column; gap: 10px;"> 
+            <a id="confirmDownload" href="#" target="_blank" class="btn-main" onclick="closeModal()">Descargar de todos modos</a> 
+            <button class="btn-secondary" onclick="closeModal()">Cerrar</button> 
+        </div> 
+    </div> 
+</div> 
 
-     <main class="main-content"> 
-         <section id="home" class="section active"> 
-             <div class="content-header"><h2>Lo Mas Nuevo de la Pagina! :D</h2><p>Cosas Destacadas Buenardas...</p></div> 
-             
-             <div class="category-list">
-                 <div class="category-title">Destacados📂</div>
-                 
-                 <div class="list-item" onclick="openModal('https://www.mediafire.com/file/mlfiepwadxdny4t/optimizacion_vulkan_1201.zip/file')">
-                     <span class="list-item-name">Minecraft Vulkan 1.20.1</span>
-                     <span class="mini-tag">VULKAN</span>
-                 </div>
+<div class="container"> 
+    <aside class="sidebar"> 
+        <div class="glass-card"> 
+            <div class="brand"> 
+                <div class="brand-logo">Alt</div> 
+                <div><h1 style="font-size: 18px;">AltProyects</h1><span style="font-size: 12px; color: var(--text-dim);">3.2.2 Pizza Tower + Fix</span></div> 
+            </div> 
+        </div> 
+        <div class="glass-card"> 
+            <h4 style="font-size: 12px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase;">Menú Principal</h4> 
+            <nav class="nav-list"> 
+                <li class="nav-item active" onclick="switchTab('home')">Inicio🏠</li> 
+                <li class="nav-item" onclick="switchTab('minecraft')">Computadoras⛏️</li> 
+                <li class="nav-item" onclick="switchTab('android')">Android📱</li> 
+                <li class="nav-item" onclick="switchTab('info')">Info miaℹ️</li> 
+            </nav> 
+        </div> 
+    </aside> 
 
-                 <div class="list-item" onclick="openModal('#')">
-                     <span class="list-item-name">MI LORE (Porque cree la pagina?)</span>
-                     <span class="mini-tag">PRONTO</span>
-                 </div>
+    <main class="main-content"> 
+        <section id="home" class="section active"> 
+            <div class="content-header"><h2>Lo Mas Nuevo de la Pagina! :D</h2><p>Cosas Destacadas Buenardas...</p></div> 
+            
+            <div class="category-list">
+                <div class="category-title">Destacados📂</div>
+                
+                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/mlfiepwadxdny4t/optimizacion_vulkan_1201.zip/file')">
+                    <span class="list-item-name">Minecraft Vulkan 1.20.1</span>
+                    <span class="mini-tag">VULKAN</span>
+                </div>
 
-                 <div class="list-item" onclick="openModal('#')">
-                     <span class="list-item-name">Placeholder #2</span>
-                     <span class="mini-tag">PRONTO</span>
-                 </div>
+                <div class="list-item" onclick="openModal('#')">
+                    <span class="list-item-name">Mi Lore</span>
+                    <span class="mini-tag">PRONTO</span>
+                </div>
 
-                 <div class="list-item" onclick="openModal('#')">
-                     <span class="list-item-name">Placeholder #3</span>
-                     <span class="mini-tag">PRONTO</span>
-                 </div>
-             </div>
-         </section> 
+                <div class="list-item" onclick="openModal('#')">
+                    <span class="list-item-name">Placeholder #2</span>
+                    <span class="mini-tag">PRONTO</span>
+                </div>
 
-         <section id="minecraft" class="section"> 
-             <div class="content-header"><h2>Optimización Para Minecraft ⛏️</h2></div> 
-             <div class="category-list">
-                 <div class="category-title">⛏️ Minecraft</div>
-                 <div class="list-item" onclick="openModal('https://www.mediafire.com/file/j5pl6yogm9ub847/Mods_FPS_Sodium.rar/file')">
-                     <span class="list-item-name">Minecraft 1.21.11 Sodium</span>
-                     <span class="mini-tag">SODIUM</span>
-                 </div>
-                 <div class="list-item" onclick="openModal('https://www.mediafire.com/file/mlfiepwadxdny4t/optimizacion_vulkan_1201.zip/file')">
-                     <span class="list-item-name">Minecraft Vulkan 1.20.1</span>
-                     <span class="mini-tag">VULKAN</span>
-                 </div>
-             </div>
-         </section> 
+                <div class="list-item" onclick="openModal('#')">
+                    <span class="list-item-name">Placeholder #3</span>
+                    <span class="mini-tag">PRONTO</span>
+                </div>
+            </div>
+        </section> 
 
-         <section id="android" class="section"> 
-             <div class="content-header"><h2>Apps Android 📱</h2><p>Pura cosa para celular.</p></div> 
-             <div class="category-list">
-                 <div class="category-title">📱 Android</div>
-                 <div class="list-item" onclick="openModal('https://www.mediafire.com/file/n0fdjdudtoptkbn/GeometryDash2207.apks/file')">
-                     <span class="list-item-name">Geometry Dash 2.207</span>
-                     <span class="mini-tag">JUEGO</span>
-                     
-                 </div>  <div class="list-item" onclick="openModal('https://www.mediafire.com/file/w6701i0s310lb6i/com.sega.soniccd.classic_4.0.0.apks/file')">
-                     <span class="list-item-name">Sonic CD (Port Oficial)</span>
-                     <span class="mini-tag">ANDROID - NO EN TIENDAS</span>
-                        </div>  <div class="list-item" onclick="openModal('https://www.mediafire.com/file/z38f45s1fcc9tv3/angry_birds_starwars_alt.apk/file')">
-                     <span class="list-item-name">Angry Birds Star Wars</span>
-                     <span class="mini-tag">ANDROID - NO EN TIENDAS</span>
-                 </div>
-             </div>
-         </section> 
+        <section id="minecraft" class="section"> 
+            <div class="content-header"><h2>Optimización Para Computadoras MALAS</h2></div> 
+            <div class="category-list">
+                <div class="category-title">⛏️ Minecraft y Mas</div>
+                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/j5pl6yogm9ub847/Mods_FPS_Sodium.rar/file')">
+                    <span class="list-item-name">Minecraft 1.21.11 Sodium</span>
+                    <span class="mini-tag">SODIUM</span>
+                </div>
+                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/mlfiepwadxdny4t/optimizacion_vulkan_1201.zip/file')">
+                    <span class="list-item-name">Minecraft Vulkan 1.20.1</span>
+                    <span class="mini-tag">VULKAN</span>
+                </div> 
+                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/ul2h32vg6mkquzw/PIZZATOWER_ALTPROYECTSV2.rar/file')">
+                    <span class="list-item-name">Pizza Tower</span>
+                    <span class="mini-tag">NO TESTEADO</span>
+                </div>
+            </div>
+        </section> 
 
-         <section id="info" class="section"> 
-             <div class="glass-card"> 
-                 <h3 style="color: var(--accent); margin-bottom: 15px;">Redes Sociales 📡 </h3> 
-                 <p><strong></strong> Tiktok: @nether.studios</p> 
-                 <p style="margin-top: 10px;">Youtube: @alguienxki</p> 
-             </div> 
-         </section> 
-     </main> 
- </div> 
+        <section id="android" class="section"> 
+            <div class="content-header"><h2>Apps Android 📱</h2><p>Pura cosa para celular.</p></div> 
+            <div class="category-list">
+                <div class="category-title">📱 Android</div>
+                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/n0fdjdudtoptkbn/GeometryDash2207.apks/file')">
+                    <span class="list-item-name">Geometry Dash 2.207</span>
+                    <span class="mini-tag">JUEGO</span>
+                </div> 
+                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/w6701i0s310lb6i/com.sega.soniccd.classic_4.0.0.apks/file')">
+                    <span class="list-item-name">Sonic CD (Port Oficial)</span>
+                    <span class="mini-tag">ANDROID - NO EN TIENDAS</span>
+                </div> 
+                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/z38f45s1fcc9tv3/angry_birds_starwars_alt.apk/file')">
+                    <span class="list-item-name">Angry Birds Star Wars</span>
+                    <span class="mini-tag">ANDROID - NO EN TIENDAS</span>
+                </div>
+            </div>
+        </section> 
 
- <script> 
-     function switchTab(tabId) { 
-         document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
-         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
-         document.getElementById(tabId).classList.add('active'); 
-         if(event) event.currentTarget.classList.add('active'); 
-     } 
+        <section id="info" class="section"> 
+            <div class="glass-card"> 
+                <h3 style="color: var(--accent); margin-bottom: 15px;">Redes Sociales 📡 </h3> 
+                <p>Tiktok: @nether.studios</p> 
+                <p style="margin-top: 10px;">Youtube: @alguienxki</p> 
+            </div> 
+        </section> 
+    </main> 
+</div> 
 
-     function openModal(url) { 
-         const modal = document.getElementById('downloadModal'); 
-         const confirmBtn = document.getElementById('confirmDownload'); 
-         confirmBtn.href = url; 
-         modal.style.display = 'flex'; 
-     } 
+<script> 
+    function switchTab(tabId) { 
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
+        document.getElementById(tabId).classList.add('active'); 
+        if(event) event.currentTarget.classList.add('active'); 
+    } 
 
-     function closeModal() { 
-         document.getElementById('downloadModal').style.display = 'none'; 
-     } 
+    function openModal(url) { 
+        const modal = document.getElementById('downloadModal'); 
+        const confirmBtn = document.getElementById('confirmDownload'); 
+        confirmBtn.href = url; 
+        modal.style.display = 'flex'; 
+    } 
 
-     window.onclick = function(event) { 
-         const modal = document.getElementById('downloadModal'); 
-         if (event.target == modal) { 
-             closeModal(); 
-         } 
-     } 
- </script> 
+    function closeModal() { 
+        document.getElementById('downloadModal').style.display = 'none'; 
+    } 
 
- </body> 
- </html>
+    window.onclick = function(event) { 
+        const modal = document.getElementById('downloadModal'); 
+        if (event.target == modal) { 
+            closeModal(); 
+        } 
+    } 
+</script> 
+
+</body> 
+</html>
