@@ -3,7 +3,7 @@
 <head> 
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>AltProyects | 3.3.0</title> 
+    <title>AltProyects | 3.3.1</title> 
     <style> 
         :root { 
             --bg: #050505; 
@@ -19,7 +19,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; } 
 
-        /* --- FONDO DINÁMICO RE FACHA --- */
         body { 
             background-color: var(--bg); 
             color: var(--text-main); 
@@ -48,7 +47,6 @@
             100% { transform: scale(1.1) translate(2%, 2%); }
         }
 
-        /* --- ESTRUCTURA --- */
         .container { 
             width: 100%; 
             max-width: 1200px; 
@@ -87,32 +85,47 @@
         } 
         .nav-item:hover, .nav-item.active { background: rgba(255, 77, 77, 0.1); color: var(--accent); } 
 
-        /* --- MAIN CONTENT --- */ 
         .content-header { margin-bottom: 25px; animation: fadeIn 0.5s ease-out; } 
         .content-header h2 { font-size: 28px; margin-bottom: 5px; } 
 
+        /* --- NUEVA LISTA CON SCROLL INFINITO --- */
         .category-list {
-            display: flex;
-            flex-direction: column;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             overflow: hidden;
             margin-bottom: 20px;
             backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            max-height: 500px; /* Altura máxima antes de activar el scroll */
         }
 
         .category-title {
             padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.05);
             border-bottom: 1px solid var(--border);
             font-size: 14px;
             font-weight: bold;
-            color: var(--text-dim);
+            color: var(--accent);
             display: flex;
             align-items: center;
             gap: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 2;
         }
+
+        /* Contenedor interno para el scroll */
+        .scroll-area {
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* Custom Scrollbar */
+        .scroll-area::-webkit-scrollbar { width: 6px; }
+        .scroll-area::-webkit-scrollbar-track { background: transparent; }
+        .scroll-area::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
         .list-item {
             display: flex;
@@ -121,14 +134,13 @@
             padding: 15px 20px;
             border-bottom: 1px solid var(--border);
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             animation: slideInUp 0.5s ease-out both;
         }
 
         .list-item:hover { 
-            background: rgba(255, 77, 77, 0.1) !important; 
-            transform: translateX(10px) scale(1.01);
-            border-left: 4px solid var(--accent);
+            background: rgba(255, 77, 77, 0.12); 
+            transform: translateX(8px);
         }
         .list-item:last-child { border-bottom: none; }
 
@@ -137,42 +149,36 @@
         .mini-tag {
             font-size: 10px;
             background: rgba(255, 255, 255, 0.1);
-            padding: 2px 6px;
+            padding: 2px 8px;
             border-radius: 4px;
             color: var(--text-dim);
             text-transform: uppercase;
+            font-weight: bold;
         }
 
-        /* --- ANIMACIONES --- */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); filter: blur(10px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); filter: blur(5px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
         @keyframes pulseGlow { 0%, 100% { box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3); } 50% { box-shadow: 0 4px 25px rgba(255, 77, 77, 0.6); } }
 
-        /* Stagger para la lista */
-        .list-item:nth-child(1) { animation-delay: 0.1s; }
-        .list-item:nth-child(2) { animation-delay: 0.2s; }
-        .list-item:nth-child(3) { animation-delay: 0.3s; }
-        .list-item:nth-child(4) { animation-delay: 0.4s; }
-
-        /* MODAL */ 
         .modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); 
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); 
             display: none; justify-content: center; align-items: center; z-index: 1000; 
         } 
         .modal-content { 
             background: var(--surface); border: 1px solid var(--accent); 
-            padding: 30px; border-radius: var(--radius); max-width: 400px; 
+            padding: 30px; border-radius: var(--radius); max-width: 450px; 
             text-align: center; box-shadow: var(--shadow); 
             animation: fadeIn 0.3s ease-out; 
         } 
         .btn-main { 
             background: var(--accent); color: #000; border: none; 
-            padding: 12px; border-radius: 8px; font-weight: 800; 
+            padding: 14px; border-radius: 8px; font-weight: 800; 
             cursor: pointer; transition: 0.2s; text-align: center; text-decoration: none; 
         } 
-        .btn-main:hover { background: var(--accent-hover); box-shadow: 0 0 20px rgba(255, 77, 77, 0.4); } 
-        .btn-secondary { color: var(--text-dim); text-decoration: underline; font-size: 12px; cursor: pointer; background: none; border: none; margin-top: 10px; }
+        .btn-main:hover { background: var(--accent-hover); box-shadow: 0 0 20px rgba(255, 77, 77, 0.4); transform: scale(1.02); } 
+        .btn-secondary { color: var(--text-dim); text-decoration: none; font-size: 13px; cursor: pointer; background: none; border: none; margin-top: 15px; transition: 0.3s; }
+        .btn-secondary:hover { color: #fff; }
 
         .section { display: none; } 
         .section.active { display: block; } 
@@ -184,10 +190,11 @@
 
 <div id="downloadModal" class="modal-overlay"> 
     <div class="modal-content"> 
-        <p>Que onda! Te aviso que mis Archivos y Juegos casi todos estan testeados y verificados en MalwareBytes, Libres de virus peligrosos y raros, Si tu AntiVirus lanza que tiene Virus es un falso positivo de GoldBerg, Es todo sacado de mi propia PC y tambien, no me interesa su INFORMACION.</p> 
+        <h3 style="margin-bottom: 15px; color: var(--accent);">Leé esto</h3>
+        <p style="font-size: 14px; line-height: 1.5; margin-bottom: 20px;">Casi todo está testeado con <b>MalwareBytes</b>. Son libres de virus raros. Si salta algo, es un <b>falso positivo</b> (probablemente el GoldBerg crack). Todo sale de mi PC, no me interesa tu info, ¡solo que juegues!</p> 
         <div class="btn-group" style="display: flex; flex-direction: column; gap: 10px;"> 
-            <a id="confirmDownload" href="#" target="_blank" class="btn-main" onclick="closeModal()">Descargar de todos modos</a> 
-            <button class="btn-secondary" onclick="closeModal()">Cerrar</button> 
+            <a id="confirmDownload" href="#" target="_blank" class="btn-main" onclick="closeModal()">Descargar igual</a> 
+            <button class="btn-secondary" onclick="closeModal()">Mejor no, cerrar</button> 
         </div> 
     </div> 
 </div> 
@@ -197,106 +204,93 @@
         <div class="glass-card"> 
             <div class="brand"> 
                 <div class="brand-logo">Alt</div> 
-                <div><h1 style="font-size: 18px;">AltProyects</h1><span style="font-size: 12px; color: var(--text-dim);">3.3.0 TEST Lore + Hotfix Parte 1</span></div> 
+                <div><h1 style="font-size: 18px;">AltProyects</h1><span style="font-size: 12px; color: var(--text-dim);">3.3.1 | Categoria EDITOR</span></div> 
             </div> 
         </div> 
         <div class="glass-card"> 
-            <h4 style="font-size: 12px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase;">Menú Principal</h4> 
+            <h4 style="font-size: 12px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">Explorar</h4> 
             <nav class="nav-list"> 
-                <li class="nav-item active" onclick="switchTab('home')">Inicio🏠</li> 
-                <li class="nav-item" onclick="switchTab('minecraft')">Computadoras⛏️</li> 
-                <li class="nav-item" onclick="switchTab('android')">Android📱</li> 
-                <li class="nav-item" onclick="switchTab('info')">Info miaℹ️</li> 
+                <li class="nav-item active" onclick="switchTab('home')">Inicio 🏠</li> 
+                <li class="nav-item" onclick="switchTab('minecraft')">Juegos De Compu⛏️</li> 
+                <li class="nav-item" onclick="switchTab('android')">Android 📱</li> 
+                <li class="nav-item" onclick="switchTab('info')">Sobre mí ℹ️</li> 
             </nav> 
         </div> 
     </aside> 
 
     <main class="main-content"> 
         <section id="home" class="section active"> 
-            <div class="content-header"><h2>Lo Mas Nuevo de la Pagina! :D</h2><p>Cosas Destacadas Buenardas...</p></div> 
+            <div class="content-header"><h2>¿Qué hay de nuevo? 🔥</h2><p>Lo más fresco que subí estos días...</p></div> 
             
             <div class="category-list">
-                <div class="category-title">Destacados📂</div>
-                
-                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/mlfiepwadxdny4t/optimizacion_vulkan_1201.zip/file')">
-                    <span class="list-item-name">Minecraft Vulkan 1.20.1</span>
-                    <span class="mini-tag">VULKAN</span>
-                </div>
-
-                <div class="list-item" onclick="openModal('#')">
-                    <span class="list-item-name"></span>
-                    <span class="mini-tag">PRONTO</span>
-                </div>
-
-                <div class="list-item" onclick="openModal('#')">
-                    <span class="list-item-name"></span>
-                    <span class="mini-tag">PRONTO</span>
-                </div>
-
-                <div class="list-item" onclick="openModal('#')">
-                    <span class="list-item-name"></span>
-                    <span class="mini-tag">PRONTo</span>
+                <div class="category-title">Destacados 📂</div>
+                <div class="scroll-area">
+                    <div class="list-item" onclick="openModal('https://www.mediafire.com/file/mlfiepwadxdny4t/optimizacion_vulkan_1201.zip/file')">
+                        <span class="list-item-name">Minecraft Vulkan 1.20.1</span>
+                        <span class="mini-tag">TOP</span>
+                    </div>
+                      <div class="list-item" onclick="openModal('https://www.mediafire.com/file/kr5sw03dvxyo2vk/com.lemon.lvoverseas_8.2.0.apk/file')">
+                        <span class="list-item-name">CapCut (Sin Casi PRO)</span>
+                        <span class="mini-tag">EDITOR</span>
                 </div>
             </div>
         </section> 
 
         <section id="minecraft" class="section"> 
-            <div class="content-header"><h2>Optimización Para Computadoras MALAS</h2></div> 
+            <div class="content-header"><h2>PC (Para las del Gobierno 💻)</h2><p>Optimización y juegos que corren en una tostadora.</p></div> 
             <div class="category-list">
-                <div class="category-title">⛏️ Minecraft y Mas</div>
-                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/j5pl6yogm9ub847/Mods_FPS_Sodium.rar/file')">
-                    <span class="list-item-name">Minecraft 1.21.11 Sodium</span>
-                    <span class="mini-tag">SODIUM</span>
-                </div>
-                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/mlfiepwadxdny4t/optimizacion_vulkan_1201.zip/file')">
-                    <span class="list-item-name">Minecraft Vulkan 1.20.1</span>
-                    <span class="mini-tag">VULKAN</span>
-                </div> 
-                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/ul2h32vg6mkquzw/PIZZATOWER_ALTPROYECTSV2.rar/file')">
-                    <span class="list-item-name">Pizza Tower</span>
-                    <span class="mini-tag">NO TESTEADO</span>
+                <div class="category-title">⛏️ Juegos & Mods</div>
+                <div class="scroll-area">
+                    <div class="list-item" onclick="openModal('https://www.mediafire.com/file/j5pl6yogm9ub847/Mods_FPS_Sodium.rar/file')">
+                        <span class="list-item-name">Minecraft 1.21.1 Sodium</span>
+                        <span class="mini-tag">FPS+</span>
+                    </div>
+                    <div class="list-item" onclick="openModal('https://www.mediafire.com/file/ul2h32vg6mkquzw/PIZZATOWER_ALTPROYECTSV2.rar/file')">
+                        <span class="list-item-name">Pizza Tower (Full)</span>
+                        <span class="mini-tag">JUEGAZO</span>
+                    </div>
+                    <div class="list-item" onclick="openModal('#')">
+                        <span class="list-item-name">Juego Nuevo Test</span>
+                        <span class="mini-tag">NUEVO</span>
+                    </div>
                 </div>
             </div>
         </section> 
 
         <section id="android" class="section"> 
-            <div class="content-header"><h2>Apps Android 📱</h2><p>Pura cosa para celular.</p></div> 
+            <div class="content-header"><h2>Mobile 📱</h2><p>Apps que no encontrás en la Play Store.</p></div> 
             <div class="category-list">
-                <div class="category-title">📱 Android</div>
-                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/n0fdjdudtoptkbn/GeometryDash2207.apks/file')">
-                    <span class="list-item-name">Geometry Dash 2.207</span>
-                    <span class="mini-tag">JUEGO</span>
-                </div> 
-                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/w6701i0s310lb6i/com.sega.soniccd.classic_4.0.0.apks/file')">
-                    <span class="list-item-name">Sonic CD (Port Oficial)</span>
-                    <span class="mini-tag">ANDROID - NO EN TIENDAS</span>
-                </div> 
-                <div class="list-item" onclick="openModal('https://www.mediafire.com/file/z38f45s1fcc9tv3/angry_birds_starwars_alt.apk/file')">
-                    <span class="list-item-name">Angry Birds Star Wars</span>
-                    <span class="mini-tag">ANDROID - NO EN TIENDAS</span>
-                </div>
+                <div class="category-title">📱 Android APKs</div>
+                <div class="scroll-area">
+                    <div class="list-item" onclick="openModal('https://www.mediafire.com/file/n0fdjdudtoptkbn/GeometryDash2207.apks/file')">
+                        <span class="list-item-name">Geometry Dash 2.207</span>
+                        <span class="mini-tag">APK</span>
+                    </div> 
+                    <div class="list-item" onclick="openModal('https://www.mediafire.com/file/w6701i0s310lb6i/com.sega.soniccd.classic_4.0.0.apks/file')">
+                        <span class="list-item-name">Sonic CD (Port Original)</span>
+                        <span class="mini-tag">CLASSIC</span>
+                    </div> 
+                    <div class="list-item" onclick="openModal('https://www.mediafire.com/file/z38f45s1fcc9tv3/angry_birds_starwars_alt.apk/file')">
+                        <span class="list-item-name">Angry Birds Star Wars</span>
+                        <span class="mini-tag">LEGACY</span>
+                    </div>
+                  <div class="list-item" onclick="openModal('https://www.mediafire.com/file/kr5sw03dvxyo2vk/com.lemon.lvoverseas_8.2.0.apk/file')">
+                        <span class="list-item-name">CapCut (Sin Casi PRO)</span>
+                        <span class="mini-tag">EDITOR</span>
             </div>
         </section> 
 
         <section id="info" class="section"> 
             <div class="glass-card"> 
-                <h3 style="color: var(--accent); margin-bottom: 15px;">Redes Sociales 📡 </h3> 
-                
-                <p>Tiktok: @nether.studios</p> 
-                <p style="margin-top: 10px;"></p>
-                
-                
-                <h3 style="line-height: 1.6; color: var(--text-dim); justify; font-size: 14px;">LORE! 📡 </h3> 
-                <p style="margin-top: 10px;">Que onda, soy Alt, te cuento como inicie y TODO, aunque no creas es mas random de lo que realmente parece...
-                Yo comenze con un tiktok asi nomas para probar de Eventos de Minecraft.,<br><br> Si, XD. fue creado el año pasado en diciembre
-                y hicimos 2 eventos y lo abandonamos.. Y
-                desde ahi esa cuenta empezo a ser medio
-                POPULAR, empeze a HACER videos de
-                AltProyects! tenian 500, 300 visitas pero me SERVIAN ya que gente se unia amablemente, sentia que esto iba a
-                avanzar y MIRA! Aqui estamos. 3.0.0 y estoy seguro que el dia de mañana se viene la 4.0.0, <br><br> 
-                Despues
-                APRENDI a usar GoldBerg! Saque juegos como Pizza Tower, saque juegos LOST MEDIA?
-                 No tanto, pero juegos no disponibles en Play Store, y ahora tengo un Youtube con 200+ seguidores, soy FELIZ con lo que tengo. gracias! :D</p>   
+                <h3 style="color: var(--accent); margin-bottom: 15px;">Redes 📡</h3> 
+                <p>TikTok: <b>@nether.studios</b></p> 
+                <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+                <h3 style="color: var(--accent); margin-bottom: 15px;">EL LORE 💀</h3> 
+                <p style="font-size: 14px; line-height: 1.6; color: var(--text-dim);">
+                    ¿Qué onda? Soy <b>Alt</b>. Todo esto arrancó de la forma más random posible... Empecé en TikTok haciendo eventos de Minecraft en diciembre del año pasado. Hicimos dos y los mandamos a cagar, pero la cuenta se puso popular. <br><br>
+                    Ahí nació <b>AltProyects</b>. Empecé a subir videos, pegaba 300 o 500 vistas y me servía porque se unía gente copada. ¡Y mirá ahora, ya estamos en la 3.3.0!<br><br>
+                    Aprendí a usar <b>GoldBerg</b>, rescaté juegos que eran casi Lost Media o que ya no están en la Play Store, y tengo un canal de YT con más de 200 seguidores. ¡Soy feliz con lo que tenemos, gracias por bancar! ✌️
+                </p>   
             </div> 
         </section> 
     </main> 
@@ -307,7 +301,7 @@
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
         document.getElementById(tabId).classList.add('active'); 
-        if(event) event.currentTarget.classList.add('active'); 
+        event.currentTarget.classList.add('active'); 
     } 
 
     function openModal(url) { 
@@ -323,9 +317,7 @@
 
     window.onclick = function(event) { 
         const modal = document.getElementById('downloadModal'); 
-        if (event.target == modal) { 
-            closeModal(); 
-        } 
+        if (event.target == modal) closeModal(); 
     } 
 </script> 
 
